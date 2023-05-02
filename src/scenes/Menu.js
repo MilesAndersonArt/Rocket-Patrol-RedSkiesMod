@@ -13,7 +13,7 @@ class Menu extends Phaser.Scene {
     create() {
         // menu text configuration
         let menuConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Courier New',
             fontSize: '28px',
             backgroundColor: '#F3B141',
             color: '#843605',
@@ -44,7 +44,7 @@ class Menu extends Phaser.Scene {
             spaceshipSpeed: 3,
             gameTimer: 60000
           }
-
+          timer = 60000
           this.sound.play('sfx_select');
           this.scene.start("playScene");    
         }
@@ -54,9 +54,9 @@ class Menu extends Phaser.Scene {
             spaceshipSpeed: 4,
             gameTimer: 45000  
           }
-  
+          timer = 45000
           this.sound.play('sfx_select');
           this.scene.start("playScene");    
         }
-      }
-    }
+  }
+}
