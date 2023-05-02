@@ -80,6 +80,13 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        // 30-second spaceship accelerator test, quick test on timer effects
+        // if (game.settings.timer - 5000) {
+        //     this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+        //         this.add.text(game.config.width/2, game.config.height/2, 'BEEP BEEP', scoreConfig).setOrigin(0.5);
+        //     }, null, this);
+        // }
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
