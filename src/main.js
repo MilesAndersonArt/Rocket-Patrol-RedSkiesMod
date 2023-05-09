@@ -41,5 +41,5 @@ let cursorx;
 let cursory;
 let mousedown = false;
 let playerTurn = 1;
-let gameMode = 0;
+// let gameMode = 0;
 

@@ -31,13 +31,8 @@ class Play extends Phaser.Scene {
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
-        this.ship04 = new Spaceship(this, game.config.width + borderUISize*6 - 50, + borderUISize*4 - 50, 'spaceship', 0, 40).setOrigin(0,0);
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*6 - 50, borderUISize*4 - 50, 'spaceship', 0, 40).setOrigin(0,0);
 
-        // define keys
-        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         // animation config
         this.anims.create({
@@ -49,6 +44,12 @@ class Play extends Phaser.Scene {
             }),
             frameRate: 30
         });
+
+        // define keys
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         // initialize score
         this.p1Score = 0;
@@ -68,7 +69,7 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-        this.timerCounter = this.add.text(borderUISize + borderPadding + 450, borderUISize + borderPadding*2, 'Time: ' + this.timeLeft, scoreConfig);
+        this.timerCounter = this.add.text(borderUISize + borderPadding + 450, borderUISize + borderPadding*2, 'Time:' + this.timeLeft, scoreConfig);
         
         this.startTimer(1000000000);
         // GAME OVER flag
@@ -89,7 +90,7 @@ class Play extends Phaser.Scene {
         const elapsed = this.timerEvent.getElapsed()
         const remaining = Math.max(0, timer - elapsed)
         this.timeLeft = remaining / 1000;
-        this.timerCounter.text = 'Time: ' + this.timeLeft.toFixed(0);
+        this.timerCounter.text = this.timeLeft.toFixed(0);
         // Spaceship Acceleration
         if ((elapsed / 1000).toFixed(0) == 30 && this.accelerationTrigger) {
             game.settings.spaceshipSpeed += 3;
@@ -186,13 +187,13 @@ class Play extends Phaser.Scene {
             timer += 5000;
         }
         this.p1Score += ship.points;
-        this.scoreLeft.text = 'Score:' + this.p1Score; 
+        this.scoreLeft.text = 'P1:' + this.p1Score; 
         
         this.sound.play('sfx_explosion');
       }
 
       startTimer(duration = 60000){
-        this.timerEvent = this.timeLeft.addEvent({
+        this.timerEvent = this.time.addEvent({
             delay: duration
         })
       }
