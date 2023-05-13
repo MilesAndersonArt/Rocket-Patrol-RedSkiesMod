@@ -4,10 +4,15 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image('Title', './assets/Title.png');
         // load audio
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.audio('sfx_enemydeath_1', './assets/deathnoise1.m4a');
+        this.load.audio('sfx_enemydeath_2', './assets/deathnoise2.m4a');
+        this.load.audio('sfx_enemydeath_3', './assets/deathnoise3.m4a');
+        this.load.audio('sfx_enemydeath_4', './assets/deathnoise4.m4a');
     }
 
     create() {
@@ -15,8 +20,8 @@ class Menu extends Phaser.Scene {
         let menuConfig = {
             fontFamily: 'Courier New',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#fcc603',
+            color: '#000000',
             align: 'right',
             padding: {
                 top: 5,
@@ -26,12 +31,8 @@ class Menu extends Phaser.Scene {
         }
         
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize*2 + borderPadding*2 + 50, 'HIGH SCORE:' + highscore, menuConfig).setOrigin(0.5);
+        this.title = this.add.sprite(game.config.width/2, game.config.height/2, 'Title');
+        this.add.text(game.config.width/2 + 150, game.config.height/2 + borderUISize*2 + borderPadding*2 + 60, 'HIGH SCORE:' + highscore, menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);

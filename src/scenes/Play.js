@@ -7,32 +7,36 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+
+        // scrolling tile sprites / parallax
+        this.load.image('groundfog', './assets/GroundFog.png');
+        this.load.image('clouds', './assets/Clouds.png');
+        this.load.image('redsky', './assets/RedSky.png');
+
         // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/creatureexplosionanim.png', {frameWidth: 64, frameHeight: 45, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('bonus_explosion', './assets/BonusShip_Explode.png', {frameWidth: 43, frameHeight: 18, startFrame: 0, endFrame: 1});
+
+        // load texture atlas
+        this.load.atlas('creature1idleatlas', 'assets/CreatureIdleAnim.png', 'assets/creatureidleanim.json');
+        this.load.atlas('bonusatlas', 'assets/BonusShip_Idle.png', 'assets/BonusShip_Idle.json');
     }
 
     create() {
         // place tile sprite background
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
-        this.starfield.setInteractive();
-        // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        this.redsky = this.add.tileSprite(0, 0, 640, 480, 'redsky').setOrigin(0, 0);
+        this.clouds = this.add.tileSprite(0, 0, 640, 180, 'clouds').setOrigin(0, 0);
+        this.groundfog = this.add.tileSprite(0, 0, 640, 480, 'groundfog').setOrigin(0, 0);
+        // white UI background
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0xffffff).setOrigin(0, 0);
+        // black borders
+        this.add.rectangle(0, 0, game.config.width, borderUISize, 0x000000).setOrigin(0 ,0);
+        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0x000000).setOrigin(0 ,0);
+        this.add.rectangle(0, 0, borderUISize, game.config.height, 0x000000).setOrigin(0 ,0);
+        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0x000000).setOrigin(0 ,0);
 
         // add Rocket (player 1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
-
-        // add Spaceships (x4)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
-        this.ship04 = new Spaceship(this, game.config.width + borderUISize*6 - 50, borderUISize*4 - 50, 'spaceship', 0, 40).setOrigin(0,0);
-
 
         // animation config
         this.anims.create({
@@ -41,9 +45,54 @@ class Play extends Phaser.Scene {
                 start: 0, 
                 end: 9, 
                 first: 0
+                
             }),
             frameRate: 30
         });
+
+        this.anims.create({
+            key: 'bonus_explode',
+            frames: this.anims.generateFrameNumbers('bonus_explosion', { 
+                start: 0, 
+                end: 1, 
+                first: 0
+                
+            }),
+            frameRate: 30
+        });
+
+        // creature (spaceship) texture atlas anim
+        this.anims.create({
+            key: 'creature',
+            frames: this.anims.generateFrameNames('creature1idleatlas', {
+                prefix: 'creatureidle(',
+                start: 1,
+                end: 4,
+                suffix: ')'
+            }),
+            frameRate: 4,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'bonus',
+            frames: this.anims.generateFrameNames('bonusatlas', {
+                prefix: 'BonusShip(',
+                start: 1,
+                end: 2,
+                suffix: ')'
+            }),
+            frameRate: 2,
+            repeat: -1
+        })
+
+        // add Spaceships (x3)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'bonus', 'BonusShip(1)', 40, 1).setOrigin(0, 0);
+        this.ship01.play('bonus',true);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'creature1idleatlas', 'creatureidle(1)', 20, 0).setOrigin(0,0);
+        this.ship02.play('creature',true);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'creature1idleatlas', 'creatureidle(1)', 10, 0).setOrigin(0,0);
+        this.ship03.play('creature',true);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -59,8 +108,8 @@ class Play extends Phaser.Scene {
         let scoreConfig = {
             fontFamily: 'Courier New',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
             align: 'right',
             padding: {
                 top: 5,
@@ -101,9 +150,9 @@ class Play extends Phaser.Scene {
             let scoreConfig = {
                 fontFamily: 'Courier New',
                 fontSize: '28px',
-                backgroundColor: '#820000',
-                color: '#030000',
-                align: 'right',
+                backgroundColor: '#000000',
+                color: '#FFFFFF',
+                align: 'center',
                 padding: {
                 top: 5,
                 bottom: 5,
@@ -127,24 +176,24 @@ class Play extends Phaser.Scene {
             highscore = Math.max(this.p1Score)
             this.scene.start("menuScene");
             this.gameOver = false;
+            this.accelerationTrigger = true;
             timer = 60000;
         }
 
-        this.starfield.tilePositionX -= 4;  // update tile sprite
+        this.redsky.tilePositionX += 4;
+        this.clouds.tilePositionX += 1;
+        this.groundfog.tilePositionX -= 5;
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1
             this.ship01.update();               // update spaceship (x3)
             this.ship02.update();
             this.ship03.update();
-            this.ship04.update();
+
         }
 
         // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship04)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship04);
-        }
+
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
@@ -155,7 +204,7 @@ class Play extends Phaser.Scene {
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
-            this.shipExplode(this.ship01);
+            this.bonusExplode(this.ship01);
         }
     }
 
@@ -187,7 +236,31 @@ class Play extends Phaser.Scene {
             timer += 5000;
         }
         this.p1Score += ship.points;
-        this.scoreLeft.text = 'P1:' + this.p1Score; 
+        this.scoreLeft.text = this.p1Score; 
+        
+        this.sound.play('sfx_explosion');
+        let test = Math.floor(Math.random() * 4) + 1;
+        let enemydeathsfx = 'sfx_enemydeath_' + test;
+        this.sound.play(enemydeathsfx);
+      }
+    
+      bonusExplode(ship) {
+        // temporarily hide ship
+        ship.alpha = 0;                         
+        // create explosion sprite at ship's position
+        let boom = this.add.sprite(ship.x, ship.y, 'bonus_explosion').setOrigin(0, 0);
+        boom.anims.play('bonus_explode');             // play explode animation
+        boom.on('animationcomplete', () => {    // callback after anim completes
+            ship.reset();                         // reset ship position
+            ship.alpha = 1;                       // make ship visible again
+            boom.destroy();                       // remove explosion sprite
+        });
+        // score add and repaint
+        if(ship.points == 40){
+            timer += 5000;
+        }
+        this.p1Score += ship.points;
+        this.scoreLeft.text = this.p1Score; 
         
         this.sound.play('sfx_explosion');
       }
