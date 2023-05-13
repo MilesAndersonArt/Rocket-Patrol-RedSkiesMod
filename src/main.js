@@ -16,7 +16,10 @@
     + Implement a new timing/scoring mechanism that adds time to the clock for successful hits (15)
  
     Sources:
+    - I borrowed the speed increase code from Nhan Nguyen's Rocket Patrol mod.
+        - credit: https://github.com/Ataru2002/Rocket-Patrol
     - 'enemydeath' sound effects recorded by me through Voice Memos app
+    - 'pickupCoin' sound effect created with jsfxr
 */ 
 
 let config = {
@@ -42,6 +45,4 @@ let input;
 let cursorx;
 let cursory;
 let mousedown = false;
-let playerTurn = 1;
-// let gameMode = 0;
 

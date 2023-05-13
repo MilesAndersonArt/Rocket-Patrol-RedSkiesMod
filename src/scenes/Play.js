@@ -61,7 +61,7 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
-        // creature (spaceship) texture atlas anim
+        // texture atlas anims
         this.anims.create({
             key: 'creature',
             frames: this.anims.generateFrameNames('creature1idleatlas', {
@@ -102,7 +102,6 @@ class Play extends Phaser.Scene {
 
         // initialize score
         this.p1Score = 0;
-        // this.p2Score = 0;
         this.timeLeft = timer / 1000;
         // display score
         let scoreConfig = {
@@ -169,6 +168,7 @@ class Play extends Phaser.Scene {
             highscore = Math.max(this.p1Score)
             this.scene.restart();
             this.gameOver = false;
+            this.accelerationTrigger = true;
             timer = 60000;
         }
 
@@ -260,9 +260,9 @@ class Play extends Phaser.Scene {
             timer += 5000;
         }
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score; 
-        
-        this.sound.play('sfx_explosion');
+        this.scoreLeft.text = this.p1Score;
+
+        this.sound.play('sfx_bonus');
       }
 
       startTimer(duration = 60000){

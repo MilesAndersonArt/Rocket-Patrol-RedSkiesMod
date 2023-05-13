@@ -13,6 +13,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_enemydeath_2', './assets/deathnoise2.m4a');
         this.load.audio('sfx_enemydeath_3', './assets/deathnoise3.m4a');
         this.load.audio('sfx_enemydeath_4', './assets/deathnoise4.m4a');
+        this.load.audio('sfx_bonus', './assets/pickupCoin.wav')
     }
 
     create() {
